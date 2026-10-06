@@ -1,0 +1,5 @@
+node_modules
+.next
+artifacts
+public/maplibre
+package-lock.json
