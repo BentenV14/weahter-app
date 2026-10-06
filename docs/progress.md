@@ -36,3 +36,23 @@ Final evidence:
 - Production dependency audit: zero vulnerabilities.
 
 Artifacts: ignored `artifacts/` contains screenshots and logs. Production preview: http://localhost:3100. Development: http://localhost:3000.
+
+## Worldwide locations and automatic startup — follow-up
+
+Completed the requested location expansion and consent flow. Open-Meteo / GeoNames search now requests the maximum 100 matches, supports a country filter, and retains direct-coordinate input. GeoNames supplies 250 current countries and territories through a daily-cached country endpoint and an attributed, downloaded fallback snapshot. No paid credentials are needed by these configured sources.
+
+Startup and refresh load actual device coordinates when permission is accepted, with a locality name from BigDataCloud's browser reverse-geocoding endpoint. Automatic URLs carry `location=device`; shared links remove this marker and retain their intended coordinates. Denied or unavailable access opens country information, using only Country.is's approximate country code. Country detection never supplies a guessed nearest city. Manual selections made during detection remain active, and a renewed explicit device request supersedes an earlier manual selection. Offline startup restores a previously chosen place and its saved forecast.
+
+Review findings resolved: old coordinates are removed immediately when denied startup enters country information, including while a network-country lookup is pending; device URLs re-detect on reload; repeated explicit GPS requests update intent; denial messages accurately describe available country information. The delayed-country reload, moved-device reload and manual-selection races have regressions. Direct-coordinate input resolves immediately rather than showing an old recent result during the text-search debounce.
+
+Final follow-up evidence:
+
+- Typecheck and lint: pass.
+- Unit tests: 36/36 in 6 files pass, including ten location tests.
+- Production build: pass; five dynamic API routes, including the new country catalog.
+- Production Playwright: 12/12 journeys pass, including five new location journeys, offline navigation and expired real forecast data.
+- Live API checks: country catalog returns 250 entries; a worldwide London query returns 100 matches across 23 countries.
+- Axe WCAG A/AA: no violations in country desktop light/mobile dark, worldwide search, forecast desktop dark/light, tablet, mobile or the search dialog.
+- Country desktop/mobile screenshots visually reviewed; no horizontal overflow. Existing forecast accessibility and browser review scripts now use explicit example coordinates.
+
+Provider capabilities and usage terms are linked in README. Country population values are source estimates, with their limitations visible. Source failure falls back to the genuine bundled country snapshot; unavailable device/network detection leaves worldwide search usable. Precise browser position and country detection are client-side; returned IP addresses are not stored by the app.
